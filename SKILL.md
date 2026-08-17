@@ -188,6 +188,7 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
    ```
    （最後一行啟用 Pages；若回「已存在」的錯誤，忽略即可。`{owner}` 用 `gh api user --jq .login` 取得。）
 3. 網址為 `https://<帳號>.github.io/<slug>/`。**Pages 首次建置約需 1 分鐘**，用瀏覽器打開這個網址展示；若一開始 404，稍等後重整。
+   - **要打開的一定是這個 GitHub Pages 線上網址（`https://...github.io/...`），絕對不要在瀏覽器開本機的 `index.html`（`file://` 或本機路徑）。** 那個視窗對本機檔只會給「沒有樣式的靜態快照」，開了只會誤導。要看成果 = 開線上網址；本機檔一律不開。
 
 **之後每次修改都自動上線：**
 
@@ -197,6 +198,7 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 ## 不要起本機伺服器、不要自己做預覽檔
 
 - 預覽一律用 GitHub Pages 的網址，**不要起任何本機伺服器**（不要 `python -m http.server`、`php -S`、`npx serve`、`launch.json`），也不要做「暫時合併版」或任何臨時檔。
+- **不要在瀏覽器打開本機的 `index.html`（`file://`）來預覽**，也不要用電腦截圖去驗證本機檔——本機檔在這個瀏覽器視窗只會是沒樣式的快照。唯一的預覽方式是「部署後開 GitHub Pages 網址」。
 
 ## 速度優先：一次生成就部署（重要）
 
