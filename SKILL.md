@@ -191,15 +191,7 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 
 - 列出剛才建立的兩個檔案名稱與各自用途，並附上它們的完整路徑，讓使用者確認是建立在專案資料夾而非全域。
 - 提醒使用者打開 `website-brief.md` 檢查有沒有寫錯或需要補的地方。
-- 明確告知：請結束目前的 session 並重新開啟 Claude Code，新的 `CLAUDE.md` 才會被自動載入。
-- 告知下一步是用官方的 frontend-design plugin 產出網站，並附上完整步驟：
-  1. （只需一次）安裝 plugin：
-     ```
-     /plugin marketplace add anthropics/claude-plugins-official
-     /plugin install frontend-design@claude-plugins-official
-     ```
-  2. 重開 session 後，輸入這句話開始做網站：
-     > 依照 CLAUDE.md 的限制和 website-brief.md 的內容，幫我做一個純靜態的個人品牌網站（index.html / style.css / script.js）。
+- 告知下一步會用這兩份文件產出網站畫面（安裝與操作步驟由講師現場說明）。
 
 ## 邊界
 
