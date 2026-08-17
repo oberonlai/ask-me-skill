@@ -168,7 +168,7 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 
 ## 技術限制（硬性護欄，一定要遵守）
 
-- **純靜態網站，只產出 index.html、style.css、script.js 與 images/；不要建立任何需要編譯的專案。**
+- **純靜態網站，只產出 index.html、style.css、script.js，圖片直接放在專案根目錄（不要另開 images／或其他資料夾）；不要建立任何需要編譯的專案。**
 - **絕對不要使用 React／Vue／Next.js 等框架，不要 npm install，不要 build 步驟、不要打包工具。** 若 frontend-design 想搭框架，一律改成單一 HTML 檔的原生寫法。
 - 所有內容寫在單一頁面，用錨點連結切換段落。
 - 手機版需正常顯示。
@@ -177,7 +177,7 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 
 這個網站必須可以直接用瀏覽器打開本機檔案（`file://`）就正常顯示，包含樣式與互動。為此：
 
-- **CSS、JS、圖片一律用相對路徑 `./`（例如 `./style.css`、`./images/photo.jpg`）。絕對禁止用根目錄開頭的路徑（例如 `/style.css`）**，否則直接開檔會抓不到樣式（`/` 在 `file://` 會指到硬碟根目錄）。
+- **CSS、JS、圖片一律用相對路徑 `./`（例如 `./style.css`、`./photo.jpg`，圖片就在同一層根目錄）。絕對禁止用根目錄開頭的路徑（例如 `/style.css`）**，否則直接開檔會抓不到樣式（`/` 在 `file://` 會指到硬碟根目錄）。
 - **不要用 `<script type="module">`，也不要用 `fetch()` 載入本機檔案**（`file://` 會被 CORS 擋住而失效）。JS 直接用一般 `<script src="./script.js"></script>`。
 - **嚴禁為了預覽而啟動任何本機伺服器**：不要用 Python（`python -m http.server`）、不要建立 `launch.json` 或任何 VS Code 偵錯／伺服器設定、不要用其他語言起 server。
 - 若預覽時樣式或功能跑掉，**先檢查是不是用了絕對路徑或 module/fetch，把它改成相對路徑的原生寫法**，而不是去架伺服器繞過問題。
@@ -186,7 +186,7 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 ## 完工前品質檢查（做完自己逐項確認）
 
 - [ ] hero 主標題一行講清楚「我幫誰解決什麼」。
-- [ ] 只有 index.html／style.css／script.js／images/，沒有 node_modules、沒有 build 產物。
+- [ ] 只有 index.html／style.css／script.js 與根目錄的圖片檔，沒有 node_modules、沒有 build 產物。
 - [ ] 內容用的是 website-brief.md 的真實文字，沒有 lorem ipsum 或假資料。
 - [ ] 手機版不爆版，圖片都有 alt。
 - [ ] 用瀏覽器打開實際看過一次，沒有明顯破圖或跑版。
@@ -195,7 +195,7 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 
 - 開始做網站前，先掃過目前的專案資料夾，讀取使用者放進來的素材再動工，不要憑空生內容：
   - 履歷／自我介紹檔案（例如 `resume.pdf`、`resume.docx`、`about.md` 等）→ 取真實經歷、技能、聯絡方式，優先用於「關於我」與文案。
-  - `images/` 裡的圖片 → 個人照片、作品圖，直接用相對路徑引用（例如 `./images/photo.jpg`），並補上 alt。
+  - 專案根目錄裡的圖片（個人照片、作品圖）→ 直接用相對路徑引用（例如 `./photo.jpg`），並補上 alt。
   - `website-brief.md` → 訪談整理出的需求主檔。
 - 若某些資訊在這些檔案裡找不到，寧可標「（待補）」或詢問，也不要自己編造經歷、數字或客戶案例。
 ```
