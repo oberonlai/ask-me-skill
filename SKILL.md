@@ -125,6 +125,8 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 ```markdown
 # 專案設定：個人品牌網站
 
+> 這份設定是「護欄＋內容」。網站的視覺美學（配色、字體配對、動效、排版細節）交給 frontend-design plugin 發揮，這裡只負責把它框在正確的內容、風格方向與技術限制內，不要在這份檔案裡把顏色字體鎖死。
+
 ## 溝通方式
 
 - 一律使用繁體中文回覆，並用白話文解釋你做了什麼。
@@ -156,18 +158,26 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 - 不要使用的字詞：（誇大、業配感、空泛形容詞）
 - 主標題必須在一行內講出「我幫誰解決什麼」。
 
-## 視覺風格
+## 視覺風格（只給方向，執行交給 frontend-design）
 
-- 風格關鍵字：（依 Q6 選的方向）
-- 主色／輔色：
+- 風格方向與心情關鍵字：（依 Q6 選的方向，用形容詞描述，例如「簡約專業、乾淨、大留白」或「科技現代、深色、有動態感」）
+- 具體配色、字體配對、動效由 frontend-design 依這個方向決定，不要在這裡指定死值。
 
-## 技術限制
+## 技術限制（硬性護欄，一定要遵守）
 
-- 純靜態網站：index.html、style.css、script.js、images/。
-- 不使用需要編譯的框架，不安裝 npm 套件。
+- **純靜態網站，只產出 index.html、style.css、script.js 與 images/；不要建立任何需要編譯的專案。**
+- **絕對不要使用 React／Vue／Next.js 等框架，不要 npm install，不要 build 步驟、不要打包工具。** 若 frontend-design 想搭框架，一律改成單一 HTML 檔的原生寫法。
 - 所有內容寫在單一頁面，用錨點連結切換段落。
-- 需可部署到 GitHub Pages，路徑一律使用相對路徑。
+- 需可直接部署到 GitHub Pages（把檔案丟上去就能開），路徑一律使用相對路徑。
 - 手機版需正常顯示。
+
+## 完工前品質檢查（做完自己逐項確認）
+
+- [ ] hero 主標題一行講清楚「我幫誰解決什麼」。
+- [ ] 只有 index.html／style.css／script.js／images/，沒有 node_modules、沒有 build 產物。
+- [ ] 內容用的是 website-brief.md 的真實文字，沒有 lorem ipsum 或假資料。
+- [ ] 手機版不爆版，圖片都有 alt。
+- [ ] 用瀏覽器打開實際看過一次，沒有明顯破圖或跑版。
 
 ## 素材位置
 
@@ -182,7 +192,15 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 - 列出剛才建立的兩個檔案名稱與各自用途，並附上它們的完整路徑，讓使用者確認是建立在專案資料夾而非全域。
 - 提醒使用者打開 `website-brief.md` 檢查有沒有寫錯或需要補的地方。
 - 明確告知：請結束目前的 session 並重新開啟 Claude Code，新的 `CLAUDE.md` 才會被自動載入。
-- 告知下一步是使用 frontend-design 的流程來產生網站畫面。
+- 告知下一步是用官方的 frontend-design plugin 產出網站，並附上完整步驟：
+  1. （只需一次）安裝 plugin：
+     ```
+     /plugin marketplace add anthropics/claude-plugins-official
+     /plugin install frontend-design@claude-plugins-official
+     ```
+  2. 重開 session 後，輸入這句話開始做網站：
+     > 依照 CLAUDE.md 的限制和 website-brief.md 的內容，幫我做一個純靜態的個人品牌網站（index.html / style.css / script.js）。
+  3. 做完可再補一句提升質感：「用瀏覽器打開截圖，自己檢查間距和層次有沒有怪，修 2 輪」。
 
 ## 邊界
 
