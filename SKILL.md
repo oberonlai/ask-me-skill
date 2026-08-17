@@ -200,7 +200,6 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
      ```
   2. 重開 session 後，輸入這句話開始做網站：
      > 依照 CLAUDE.md 的限制和 website-brief.md 的內容，幫我做一個純靜態的個人品牌網站（index.html / style.css / script.js）。
-  3. 做完可再補一句提升質感：「用瀏覽器打開截圖，自己檢查間距和層次有沒有怪，修 2 輪」。
 
 ## 邊界
 
