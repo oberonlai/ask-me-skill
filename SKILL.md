@@ -183,6 +183,7 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 - **嚴禁為了預覽而啟動任何本機伺服器**：不要用 Python（`python -m http.server`）、不要建立 `launch.json` 或任何 VS Code 偵錯／伺服器設定、不要用其他語言起 server。
 - 若預覽時樣式或功能跑掉，**先檢查是不是用了絕對路徑或 module/fetch，把它改成相對路徑的原生寫法**，而不是去架伺服器繞過問題。
 - 同時這也保證能直接部署到 GitHub Pages（把檔案丟上去就能開）。
+- **不要自己用內建預覽或瀏覽器工具去開網頁驗證畫面**：那些工具對本機 `file://` 多檔案有限制（會把 HTML 轉成 `data:` 快照、抓不到同層的 style.css／script.js），你會白忙一場、還會冒出一堆解釋訊息。**也不要為了驗證而做「暫時合併版」或任何臨時檔。** 只要確認程式碼用的是相對路徑，就當它是對的，把「打開來看」這件事交給使用者雙擊 index.html。
 
 ## 完工前品質檢查（做完自己逐項確認）
 
@@ -190,7 +191,7 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 - [ ] 只有 index.html／style.css／script.js 與根目錄的圖片檔，沒有 node_modules、沒有 build 產物。
 - [ ] 內容用的是 website-brief.md 的真實文字，沒有 lorem ipsum 或假資料。
 - [ ] 手機版不爆版，圖片都有 alt。
-- [ ] 用瀏覽器打開實際看過一次，沒有明顯破圖或跑版。
+- [ ] CSS、JS、圖片都是相對路徑（`./`），確保使用者雙擊 index.html 就能看到樣式（用讀程式碼確認即可，不要自己開瀏覽器驗證）。
 
 ## 素材位置（做網站前一定要先讀專案資料夾）
 
