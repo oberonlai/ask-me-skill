@@ -169,30 +169,49 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 
 ## 技術限制（硬性護欄，一定要遵守）
 
-- **只產出「單一自包含的 index.html」：CSS 全部寫在 `<style>` 裡、JS 全部寫在 `<script>` 裡、圖片一律用 base64（data URI）內嵌。整個網站就這一個檔案，不要外部 style.css／script.js、不要 images 資料夾。**
-- **為什麼一定要自包含**：教學會用 Claude 內建的瀏覽器視窗預覽，那個視窗把本機網頁轉成 `data:` 快照、抓不到任何外部檔案（`file://` 在該擴充也是壞的）。只有把 CSS／JS／圖片全部內嵌，樣式才會在那個視窗正常顯示。同一個自包含檔也能直接雙擊開、也能直接丟上 GitHub Pages，完全不需要伺服器（無法預期使用者本機有沒有起伺服器的工具）。
-- **絕對不要使用 React／Vue／Next.js 等框架，不要 npm install、不要 build 步驟、不要打包工具。** 若 frontend-design 想搭框架或把樣式拆成外部檔，一律改回單一 HTML 檔、內嵌寫法。
-- **不要用 `<script type="module">`，也不要用 `fetch()` 載入本機檔案**（`file://`／`data:` 會被 CORS 擋）。JS 直接寫在頁面底部的 `<script>` 內。
+- **純靜態多檔案網站**：`index.html` + `style.css` + `script.js`，圖片放在專案根目錄。可直接部署 GitHub Pages。
+- **絕對不要使用 React／Vue／Next.js 等框架，不要 npm install、不要 build 步驟、不要打包工具。** 若 frontend-design 想搭框架，一律改回原生 HTML/CSS/JS。
+- **CSS、JS、圖片一律用相對路徑 `./`（例如 `./style.css`、`./photo.jpg`）。絕對禁止用根目錄開頭的路徑（例如 `/style.css`）**——因為 GitHub Pages 會把網站放在子路徑 `https://帳號.github.io/<slug>/`，用 `/` 開頭會抓到網域根而 404。
 - 所有內容寫在單一頁面，用錨點連結切換段落。手機版需正常顯示。
 
-## 不准起伺服器；完成後才開瀏覽器展示（開一次就好）
+## 部署到 GitHub Pages（做完就上線，並在瀏覽器打開）
 
-- **嚴禁為了預覽而啟動任何本機伺服器**：不要 `python -m http.server`、`php -S`、`npx serve`，不要建 `launch.json` 或任何 VS Code 偵錯／伺服器設定。一律用「自包含單檔」解決，不靠伺服器。
-- **一定要等整個 index.html 完整寫完，才可以打開瀏覽器**。沒寫完就開，瀏覽器會快取到「沒樣式」的半成品，害使用者看到破版。
-- 完整寫完後，**直接打開這個 index.html 展示成果給使用者看即可**。因為它是自包含單檔，在 Claude 內建瀏覽器視窗（會轉成 `data:` 快照）也能正常顯示樣式，可以放心開。
-- **不要做「暫時合併版」或任何臨時檔**：輸出本身已經是自包含單檔，直接開它就好，不需要另外合併。
-- **開一次確認畫面出得來就停，不要進入截圖反覆微調的迴圈**（見下方「速度優先」）。要不要再美化，等使用者看完提出。
+這個專案的預期行為就是「做完自動上線、每次改自動更新」。使用者已於課前完成 GitHub 登入（`gh auth login`）。
 
-## 速度優先：一次生成就交件（重要）
+**首次部署：**
+
+1. 先問使用者「網站的英文代稱」（slug，全小寫、用連字號，例如 `my-brand`），作為 repo 名稱與網址。
+2. 在專案資料夾依序執行（若已是 git repo 就跳過 init）：
+   ```
+   git init
+   git add -A
+   git commit -m "初始個人品牌網站"
+   gh repo create <slug> --public --source=. --remote=origin --push
+   gh api --method POST repos/{owner}/<slug>/pages -f "source[branch]=main" -f "source[path]=/"
+   ```
+   （最後一行啟用 Pages；若回「已存在」的錯誤，忽略即可。`{owner}` 用 `gh api user --jq .login` 取得。）
+3. 網址為 `https://<帳號>.github.io/<slug>/`。**Pages 首次建置約需 1 分鐘**，用瀏覽器打開這個網址展示；若一開始 404，稍等後重整。
+
+**之後每次修改都自動上線：**
+
+- 每次改完網站檔案，**自動執行** `git add -A && git commit -m "更新網站" && git push`，不用問使用者要不要 push——這是本專案已授權的預期行為。
+- Pages 約 30–60 秒後更新，請使用者重整瀏覽器即可看到最新版。
+
+## 不要起本機伺服器、不要自己做預覽檔
+
+- 預覽一律用 GitHub Pages 的網址，**不要起任何本機伺服器**（不要 `python -m http.server`、`php -S`、`npx serve`、`launch.json`），也不要做「暫時合併版」或任何臨時檔。
+
+## 速度優先：一次生成就部署（重要）
 
 現場時間很短，學員要盡快看到成果。所以：
 
-- **一次把整個 index.html 生成完，開瀏覽器展示一次就交件，不要做截圖打磨迴圈。** 明確禁止：逐段截圖、重新載入等動畫再截圖、讀截圖後反覆微調、一個區塊一個區塊反覆調整。
-- 展示完成品後，**要不要再美化，等使用者看完提出，再針對他說的地方改**，不要自己主動反覆優化。
+- **一次把網站生成完就部署，不要做截圖打磨迴圈。** 明確禁止：逐段截圖、重新載入等動畫再截圖、讀截圖後反覆微調、一個區塊一個區塊反覆調整。
+- 上線展示後，**要不要再美化，等使用者看完提出，再針對他說的地方改**（改完一樣自動 push），不要自己主動反覆優化。
 
 ## 完工前品質檢查（做完自己逐項確認）
 
-- [ ] 整個網站就一個 index.html：CSS 在 `<style>`、JS 在 `<script>`、圖片是 base64，沒有外部 style.css／script.js、沒有 images 資料夾、沒有 node_modules 或 build 產物。
+- [ ] `index.html`／`style.css`／`script.js` 與圖片都在，沒有框架、沒有 node_modules、沒有 build 產物。
+- [ ] CSS／JS／圖片全部用相對路徑 `./`，沒有任何 `/` 開頭的絕對路徑（否則 Pages 子路徑會 404）。
 - [ ] hero 主標題一行講清楚「我幫誰解決什麼」。
 - [ ] 內容用的是 website-brief.md 的真實文字，沒有 lorem ipsum 或假資料。
 - [ ] 手機版不爆版，圖片都有 alt。
@@ -201,7 +220,7 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 
 - 開始做網站前，先掃過目前的專案資料夾，讀取使用者放進來的素材再動工，不要憑空生內容：
   - 履歷／自我介紹檔案（例如 `resume.pdf`、`resume.docx`、`about.md` 等）→ 取真實經歷、技能、聯絡方式，優先用於「關於我」與文案。
-  - 專案資料夾裡的圖片（個人照片、作品圖）→ 讀取後**用 base64 內嵌進 index.html**（因為要在 Claude 視窗顯示，不能用外部檔），並補上 alt。
+  - 專案根目錄裡的圖片（個人照片、作品圖）→ 用相對路徑引用（例如 `./photo.jpg`），並補上 alt。圖片會隨 repo 一起 push 上 Pages，正常顯示。
   - `website-brief.md` → 訪談整理出的需求主檔。
 - 若某些資訊在這些檔案裡找不到，寧可標「（待補）」或詢問，也不要自己編造經歷、數字或客戶案例。
 ```
@@ -212,7 +231,7 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 
 - 列出剛才建立的兩個檔案名稱與各自用途，並附上它們的完整路徑，讓使用者確認是建立在專案資料夾而非全域。
 - 提醒使用者打開 `website-brief.md` 檢查有沒有寫錯或需要補的地方。
-- 告知下一步會用這兩份文件產出網站畫面（安裝與操作步驟由講師現場說明）。
+- 告知下一步會用這兩份文件產出網站，並自動部署到 GitHub Pages 上線（屆時會問一個網站英文代稱；其餘操作由講師現場說明）。
 
 ## 邊界
 
