@@ -168,8 +168,17 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 - **純靜態網站，只產出 index.html、style.css、script.js 與 images/；不要建立任何需要編譯的專案。**
 - **絕對不要使用 React／Vue／Next.js 等框架，不要 npm install，不要 build 步驟、不要打包工具。** 若 frontend-design 想搭框架，一律改成單一 HTML 檔的原生寫法。
 - 所有內容寫在單一頁面，用錨點連結切換段落。
-- 需可直接部署到 GitHub Pages（把檔案丟上去就能開），路徑一律使用相對路徑。
 - 手機版需正常顯示。
+
+## 一定要能「直接雙擊 index.html 開啟」（不准起本機伺服器）
+
+這個網站必須可以直接用瀏覽器打開本機檔案（`file://`）就正常顯示，包含樣式與互動。為此：
+
+- **CSS、JS、圖片一律用相對路徑 `./`（例如 `./style.css`、`./images/photo.jpg`）。絕對禁止用根目錄開頭的路徑（例如 `/style.css`）**，否則直接開檔會抓不到樣式（`/` 在 `file://` 會指到硬碟根目錄）。
+- **不要用 `<script type="module">`，也不要用 `fetch()` 載入本機檔案**（`file://` 會被 CORS 擋住而失效）。JS 直接用一般 `<script src="./script.js"></script>`。
+- **嚴禁為了預覽而啟動任何本機伺服器**：不要用 Python（`python -m http.server`）、不要建立 `launch.json` 或任何 VS Code 偵錯／伺服器設定、不要用其他語言起 server。
+- 若預覽時樣式或功能跑掉，**先檢查是不是用了絕對路徑或 module/fetch，把它改成相對路徑的原生寫法**，而不是去架伺服器繞過問題。
+- 同時這也保證能直接部署到 GitHub Pages（把檔案丟上去就能開）。
 
 ## 完工前品質檢查（做完自己逐項確認）
 
