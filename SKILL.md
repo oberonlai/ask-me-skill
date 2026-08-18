@@ -200,26 +200,28 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 
 - **純靜態多檔案網站**：`index.html` + `style.css` + `script.js`，圖片放在專案根目錄。可直接部署 GitHub Pages。
 - **絕對不要使用 React／Vue／Next.js 等框架，不要 npm install、不要 build 步驟、不要打包工具。** 若 frontend-design 想搭框架，一律改回原生 HTML/CSS/JS。
-- **CSS、JS、圖片一律用相對路徑 `./`（例如 `./style.css`、`./photo.jpg`）。絕對禁止用根目錄開頭的路徑（例如 `/style.css`）**——因為 GitHub Pages 會把網站放在子路徑 `https://帳號.github.io/<slug>/`，用 `/` 開頭會抓到網域根而 404。
+- **CSS、JS、圖片一律用相對路徑 `./`（例如 `./style.css`、`./photo.jpg`）**，可攜、穩定，不管部署在哪都不會壞。
 - 所有內容寫在單一頁面，用錨點連結切換段落。手機版需正常顯示。
 
 ## 部署到 GitHub Pages（做完就上線，並在瀏覽器打開）
 
 這個專案的預期行為就是「做完自動上線、每次改自動更新」。使用者已於課前完成 GitHub 登入（`gh auth login`）。
 
-**首次部署：**
+**首次部署（部署到「使用者主站」，網址沒有子目錄）：**
 
-1. 先問使用者「網站的英文代稱」（slug，全小寫、用連字號，例如 `my-brand`），作為 repo 名稱與網址。
-2. 在專案資料夾依序執行（若已是 git repo 就跳過 init）：
+1. 先取得 GitHub 帳號名：`OWNER=$(gh api user --jq .login)`。
+2. **repo 名稱一定要用 `<帳號>.github.io`**（例如帳號是 `oberonlai` → repo 叫 `oberonlai.github.io`）。這是 GitHub 的「使用者主站」特例，會服務在網域根、**網址沒有子目錄**（`https://<帳號>.github.io/`），不要用其他 repo 名（否則會變成 `/<repo>/` 子目錄）。不需要問使用者要 slug。
+3. 在專案資料夾依序執行（若已是 git repo 就跳過 init）：
    ```
    git init
    git add -A
    git commit -m "初始個人品牌網站"
-   gh repo create <slug> --public --source=. --remote=origin --push
-   gh api --method POST repos/{owner}/<slug>/pages -f "source[branch]=main" -f "source[path]=/"
+   gh repo create "$OWNER.github.io" --public --source=. --remote=origin --push
+   gh api --method POST "repos/$OWNER/$OWNER.github.io/pages" -f "source[branch]=main" -f "source[path]=/"
    ```
-   （最後一行啟用 Pages；若回「已存在」的錯誤，忽略即可。`{owner}` 用 `gh api user --jq .login` 取得。）
-3. 網址為 `https://<帳號>.github.io/<slug>/`。**Pages 首次建置約需 1 分鐘**，用瀏覽器打開這個網址展示；若一開始 404，稍等後重整。
+   （最後一行啟用 Pages；若回「已存在」的錯誤，忽略即可。）
+4. 網址為 `https://<帳號>.github.io/`（**沒有子目錄**）。**Pages 首次建置約需 1 分鐘**，用瀏覽器打開這個網址展示；若一開始 404，稍等後重整。
+   - 注意：每個 GitHub 帳號只能有一個 `<帳號>.github.io` 主站 repo。若使用者已經有這個 repo，就改成 push 到那個既有 repo（或提醒使用者），不要重建。
    - **要打開的一定是這個 GitHub Pages 線上網址（`https://...github.io/...`），絕對不要在瀏覽器開本機的 `index.html`（`file://` 或本機路徑）。** 那個視窗對本機檔只會給「沒有樣式的靜態快照」，開了只會誤導。要看成果 = 開線上網址；本機檔一律不開。
 
 **之後每次修改都自動上線：**
@@ -242,7 +244,7 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 ## 完工前品質檢查（做完自己逐項確認）
 
 - [ ] `index.html`／`style.css`／`script.js` 與圖片都在，沒有框架、沒有 node_modules、沒有 build 產物。
-- [ ] CSS／JS／圖片全部用相對路徑 `./`，沒有任何 `/` 開頭的絕對路徑（否則 Pages 子路徑會 404）。
+- [ ] CSS／JS／圖片全部用相對路徑 `./`，可攜穩定。
 - [ ] hero 主標題一行講清楚「我幫誰解決什麼」。
 - [ ] 內容用的是 website-brief.md 的真實文字，沒有 lorem ipsum 或假資料。
 - [ ] 手機版不爆版，圖片都有 alt。
@@ -262,7 +264,7 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 
 - 列出剛才建立的兩個檔案名稱與各自用途，並附上它們的完整路徑，讓使用者確認是建立在專案資料夾而非全域。
 - 提醒使用者打開 `website-brief.md` 檢查有沒有寫錯或需要補的地方。
-- 告知下一步會用這兩份文件產出網站，並自動部署到 GitHub Pages 上線（屆時會問一個網站英文代稱；其餘操作由講師現場說明）。
+- 告知下一步會用這兩份文件產出網站，並自動部署到 GitHub Pages 上線（操作由講師現場說明）。
 
 ## 邊界
 
